@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Reward - VolunteerHub{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="header-content">
+        <h1>Add New Reward</h1>
+        <p>Create a new reward for students</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('rewards_list') }}" class="btn btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+            Back to List
+        </a>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="form-card">
+        <form method="post" action="{{ url_for('add_reward') }}">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="reward_name">Reward Name</label>
+                    <input type="text" id="reward_name" name="reward_name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="points_required">Points Required</label>
+                    <input type="number" id="points_required" name="points_required" required min="1">
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="reward_description">Description</label>
+                    <textarea id="reward_description" name="reward_description" rows="4"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Add Reward</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

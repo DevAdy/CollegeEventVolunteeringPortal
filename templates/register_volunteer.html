@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Register as Volunteer - VolunteerHub{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="header-content">
+        <h1>Register as Volunteer</h1>
+        <p>Sign up to volunteer for an event</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('event_list') }}" class="btn btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+            Back to Events
+        </a>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="form-card">
+        <form method="post" action="{{ url_for('register_volunteer') }}">
+            <div class="form-grid">
+                {% if session.get('is_admin') %}
+                <div class="form-group">
+                    <label for="student">Student</label>
+                    <select id="student" name="student" required>
+                        <option value="">Select a student</option>
+                        {% for student in students %}
+                        <option value="{{ student.id }}">{{ student.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="event">Event</label>
+                    <select id="event" name="event" required>
+                        <option value="">Select an event</option>
+                        {% for event in events %}
+                        <option value="{{ event.id }}">{{ event.name }} ({{ event.date }}) - {{ event.points }} points</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="notes">Notes (Optional)</label>
+                    <textarea id="notes" name="notes" rows="4" placeholder="Any special requirements or information"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

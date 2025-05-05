@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Redeem Reward - VolunteerHub{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="header-content">
+        <h1>Redeem Reward</h1>
+        <p>Use your points to claim a reward</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('rewards_list') }}" class="btn btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+            Back to Rewards
+        </a>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="form-card">
+        <form method="post" action="{{ url_for('redeem_reward') }}">
+            <div class="form-grid">
+                {% if session.get('is_admin') %}
+                <div class="form-group">
+                    <label for="student">Student</label>
+                    <select id="student" name="student" required onchange="updateAvailablePoints()">
+                        <option value="">Select a student</option>
+                        {% for student in students %}
+                        <option value="{{ student.id }}" data-points="{{ student.points }}">{{ student.name }} ({{ student.points }} points)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="reward">Reward</label>
+                    <select id="reward" name="reward" required onchange="updateRequiredPoints()">
+                        <option value="">Select a reward</option>
+                        {% for reward in rewards %}
+                        <option value="{{ reward.id }}" data-points="{{ reward.points_required }}">{{ reward.name }} ({{ reward.points_required }} points)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <div class="points-summary">
+                        <div class="points-item">
+                            <span>Available Points:</span>
+                            <span id="availablePoints">-</span>
+                        </div>
+                        <div class="points-item">
+                            <span>Required Points:</span>
+                            <span id="requiredPoints">-</span>
+                        </div>
+                        <div class="points-item points-balance">
+                            <span>Remaining Points:</span>
+                            <span id="remainingPoints">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="notes">Notes (Optional)</label>
+                    <textarea id="notes" name="notes" rows="4" placeholder="Any special requirements or delivery instructions"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="redeemBtn" disabled>Redeem Reward</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    // Initialize points display
+    let availablePoints = 0;
+    let requiredPoints = 0;
+    
+    {% if not session.get('is_admin') and session.get('is_user') %}
+        // For regular users, set their points directly
+        {% for student in students %}
+            {% if student.id == session.get('user_id') %}
+                availablePoints = {{ student.points }};
+                document.getElementById('availablePoints').textContent = availablePoints;
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    
+    function updateAvailablePoints() {
+        const studentSelect = document.getElementById('student');
+        if (studentSelect) {
+            const selectedOption = studentSelect.options[studentSelect.selectedIndex];
+            if (selectedOption && selectedOption.value) {
+                availablePoints = parseInt(selectedOption.getAttribute('data-points'));
+                document.getElementById('availablePoints').textContent = availablePoints;
+                updateRemainingPoints();
+            }
+        }
+    }
+    
+    function updateRequiredPoints() {
+        const rewardSelect = document.getElementById('reward');
+        if (rewardSelect) {
+            const selectedOption = rewardSelect.options[rewardSelect.selectedIndex];
+            if (selectedOption && selectedOption.value) {
+                requiredPoints = parseInt(selectedOption.getAttribute('data-points'));
+                document.getElementById('requiredPoints').textContent = requiredPoints;
+                updateRemainingPoints();
+            }
+        }
+    }
+    
+    function updateRemainingPoints() {
+        const remaining = availablePoints - requiredPoints;
+        const remainingElement = document.getElementById('remainingPoints');
+        remainingElement.textContent = remaining;
+        
+        // Enable/disable redeem button based on available points
+        const redeemBtn = document.getElementById('redeemBtn');
+        if (remaining >= 0 && requiredPoints > 0) {
+            redeemBtn.disabled = false;
+            remainingElement.classList.remove('negative');
+        } else {
+            redeemBtn.disabled = true;
+            if (remaining < 0) {
+                remainingElement.classList.add('negative');
+            }
+        }
+    }
+</script>
+{% endblock %}

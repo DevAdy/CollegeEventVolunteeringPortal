@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}User Dashboard - VolunteerHub{% endblock %}
+
+{% block content %}
+<section class="dashboard-header">
+    <div class="dashboard-welcome">
+        <h1>Welcome, {{ user.name }}!</h1>
+        <p>Here's an overview of your volunteer activities and rewards.</p>
+    </div>
+    <div class="dashboard-actions">
+        <a href="{{ url_for('register_volunteer') }}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path></svg>
+            Register for Event
+        </a>
+        <a href="{{ url_for('redeem_reward') }}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8a2.83 2.83 0 0 0 4 4 4 4 0 1 1-4-4"></path><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.9 4.9 1.4 1.4"></path><path d="m17.7 17.7 1.4 1.4"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.3 17.7-1.4 1.4"></path><path d="m19.1 4.9-1.4 1.4"></path></svg>
+            Redeem Reward
+        </a>
+    </div>
+</section>
+
+<section class="user-stats">
+    <div class="user-points-card">
+        <div class="points-circle">
+            <div class="points-value">{{ user.points }}</div>
+            <div class="points-label">Points</div>
+        </div>
+        <div class="points-details">
+            <h3>Your Volunteer Points</h3>
+            <p>Use your points to redeem exciting rewards!</p>
+            <a href="{{ url_for('my_points') }}" class="btn btn-outline">View Details</a>
+        </div>
+    </div>
+</section>
+
+<section class="dashboard-content">
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2>Upcoming Events</h2>
+                <a href="{{ url_for('event_list') }}" class="card-link">View All</a>
+            </div>
+            <div class="card-content">
+                {% if upcoming_events %}
+                <div class="events-list">
+                    {% for event in upcoming_events %}
+                    <div class="event-item">
+                        <div class="event-date-small">
+                            <span class="month">{{ event.date.split('-')[1] }}</span>
+                            <span class="day">{{ event.date.split('-')[2] }}</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>{{ event.name }}</h3>
+                            <p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                {{ event.location }}
+                            </p>
+                            <p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                                {{ event.points }} Points
+                            </p>
+                        </div>
+                        <a href="{{ url_for('register_volunteer') }}" class="btn btn-sm">Register</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    </div>
+                    <h3>No Upcoming Events</h3>
+                    <p>Check back later for new volunteer opportunities.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2>Available Rewards</h2>
+                <a href="{{ url_for('rewards_list') }}" class="card-link">View All</a>
+            </div>
+            <div class="card-content">
+                <div class="rewards-list">
+                    {% for reward in rewards[:3] %}
+                    <div class="reward-item">
+                        <div class="reward-icon-small">
+                            {% if reward.name == 'Campus Bookstore Voucher' %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>
+                            {% elif reward.name == 'Cafeteria Meal Pass' %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                            {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8a2.83 2.83 0 0 0 4 4 4 4 0 1 1-4-4"></path><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.9 4.9 1.4 1.4"></path><path d="m17.7 17.7 1.4 1.4"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.3 17.7-1.4 1.4"></path><path d="m19.1 4.9-1.4 1.4"></path></svg>
+                            {% endif %}
+                        </div>
+                        <div class="reward-info">
+                            <h3>{{ reward.name }}</h3>
+                            <p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                                {{ reward.points_required }} Points
+                            </p>
+                        </div>
+                        <a href="{{ url_for('redeem_reward') }}" class="btn btn-sm">Redeem</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

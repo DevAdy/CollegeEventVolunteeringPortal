@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Student List - VolunteerHub{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="header-content">
+        <h1>Student List</h1>
+        <p>View and manage all registered students</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('add_student') }}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+            Add Student
+        </a>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="card">
+        <div class="card-header">
+            <div class="search-filter">
+                <div class="search-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                    <input type="text" id="studentSearch" placeholder="Search students...">
+                </div>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="table-responsive">
+                <table class="data-table" id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Points</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.id }}</td>
+                            <td>{{ student.name }}</td>
+                            <td>{{ student.email }}</td>
+                            <td>{{ student.points }}</td>
+                            <td class="actions-cell">
+                                <button class="action-btn" title="Edit Student">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
+                                </button>
+                                <button class="action-btn" title="Delete Student">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Simple search functionality
+    document.getElementById('studentSearch').addEventListener('keyup', function() {
+        const searchValue = this.value.toLowerCase();
+        const table = document.getElementById('studentTable');
+        const rows = table.getElementsByTagName('tr');
+        
+        for (let i = 1; i < rows.length; i++) {
+            const name = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+            const email = rows[i].getElementsByTagName('td')[2].textContent.toLowerCase();
+            
+            if (name.includes(searchValue) || email.includes(searchValue)) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    });
+</script>
+{% endblock %}

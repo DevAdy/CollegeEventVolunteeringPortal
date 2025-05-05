@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}VolunteerHub - Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Make a Difference, Earn Rewards</h1>
+        <p class="hero-subtitle">Join our volunteer program and earn points for your contributions</p>
+        <div class="hero-actions">
+            {% if not session.get('user_id') %}
+                <a href="{{ url_for('signup') }}" class="btn btn-primary">Get Started</a>
+                <a href="{{ url_for('login') }}" class="btn btn-secondary">Sign In</a>
+            {% else %}
+                {% if session.get('is_admin') %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+                {% else %}
+                    <a href="{{ url_for('user_dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+                {% endif %}
+                <a href="{{ url_for('event_list') }}" class="btn btn-secondary">View Events</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="hero-image">
+        <div class="hero-blob"></div>
+        <img src="{{ url_for('static', filename='images/hero-image.png') }}" alt="Volunteers working together">
+    </div>
+</section>
+
+<section class="how-it-works">
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps-container">
+        <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <h3>Register</h3>
+            <p>Sign up for an account and browse available volunteer opportunities</p>
+        </div>
+        <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+            </div>
+            <h3>Earn Points</h3>
+            <p>Volunteer for events and earn points for your contributions</p>
+        </div>
+        <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+            </div>
+            <h3>Redeem Rewards</h3>
+            <p>Use your points to redeem exciting rewards and benefits</p>
+        </div>
+    </div>
+</section>
+
+<section class="featured-events">
+    <h2 class="section-title">Featured Events</h2>
+    <div class="events-grid">
+        <div class="event-card">
+            <div class="event-date">
+                <span class="month">May</span>
+                <span class="day">15</span>
+            </div>
+            <h3 class="event-title">Campus Cleanup</h3>
+            <p class="event-location">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Main Quad
+            </p>
+            <p class="event-points">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                50 Points
+            </p>
+            <a href="{{ url_for('register_volunteer') }}" class="btn btn-outline">Register</a>
+        </div>
+        <div class="event-card">
+            <div class="event-date">
+                <span class="month">May</span>
+                <span class="day">20</span>
+            </div>
+            <h3 class="event-title">Charity Run</h3>
+            <p class="event-location">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16  stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                City Park
+            </p>
+            <p class="event-points">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                75 Points
+            </p>
+            <a href="{{ url_for('register_volunteer') }}" class="btn btn-outline">Register</a>
+        </div>
+        <div class="event-card">
+            <div class="event-date">
+                <span class="month">Jun</span>
+                <span class="day">01</span>
+            </div>
+            <h3 class="event-title">Food Drive</h3>
+            <p class="event-location">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Student Center
+            </p>
+            <p class="event-points">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                60 Points
+            </p>
+            <a href="{{ url_for('register_volunteer') }}" class="btn btn-outline">Register</a>
+        </div>
+    </div>
+    <div class="view-all-container">
+        <a href="{{ url_for('event_list') }}" class="btn btn-secondary">View All Events</a>
+    </div>
+</section>
+
+<section class="rewards-preview">
+    <h2 class="section-title">Popular Rewards</h2>
+    <div class="rewards-grid">
+        <div class="reward-card">
+            <div class="reward-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>
+            </div>
+            <h3>Campus Bookstore Voucher</h3>
+            <p class="reward-points">100 Points</p>
+            <a href="{{ url_for('redeem_reward') }}" class="btn btn-outline">Redeem</a>
+        </div>
+        <div class="reward-card">
+            <div class="reward-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path><path d="M7 7h.01"></path></svg>
+            </div>
+            <h3>Cafeteria Meal Pass</h3>
+            <p class="reward-points">75 Points</p>
+            <a href="{{ url_for('redeem_reward') }}" class="btn btn-outline">Redeem</a>
+        </div>
+        <div class="reward-card">
+            <div class="reward-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+            </div>
+            <h3>University Merchandise</h3>
+            <p class="reward-points">150 Points</p>
+            <a href="{{ url_for('redeem_reward') }}" class="btn btn-outline">Redeem</a>
+        </div>
+    </div>
+    <div class="view-all-container">
+        <a href="{{ url_for('rewards_list') }}" class="btn btn-secondary">View All Rewards</a>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="cta-content">
+        <h2>Ready to Make a Difference?</h2>
+        <p>Join our volunteer program today and start earning rewards while giving back to your community.</p>
+        <div class="cta-actions">
+            {% if not session.get('user_id') %}
+                <a href="{{ url_for('signup') }}" class="btn btn-primary">Sign Up Now</a>
+            {% else %}
+                <a href="{{ url_for('event_list') }}" class="btn btn-primary">Browse Events</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

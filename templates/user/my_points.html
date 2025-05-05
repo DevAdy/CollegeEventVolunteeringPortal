@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}My Points - VolunteerHub{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="header-content">
+        <h1>My Points</h1>
+        <p>Track your volunteer points and activities</p>
+    </div>
+</section>
+
+<section class="user-stats">
+    <div class="user-points-card">
+        <div class="points-circle">
+            <div class="points-value">{{ user.points }}</div>
+            <div class="points-label">Points</div>
+        </div>
+        <div class="points-details">
+            <h3>Your Volunteer Points</h3>
+            <p>Use your points to redeem exciting rewards!</p>
+            <a href="{{ url_for('rewards_list') }}" class="btn btn-outline">View Rewards</a>
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="card">
+        <div class="card-header">
+            <h2>My Volunteer Activities</h2>
+        </div>
+        <div class="card-content">
+            {% if registered_events %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Date</th>
+                            <th>Location</th>
+                            <th>Points Earned</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in registered_events %}
+                        <tr>
+                            <td>{{ event.name }}</td>
+                            <td>{{ event.date }}</td>
+                            <td>{{ event.location }}</td>
+                            <td>{{ event.points }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                </div>
+                <h3>No Activities Yet</h3>
+                <p>You haven't registered for any volunteer events yet.</p>
+                <a href="{{ url_for('event_list') }}" class="btn btn-primary">Browse Events</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="card">
+        <div class="card-header">
+            <h2>Points History</h2>
+        </div>
+        <div class="card-content">
+            <div class="points-history">
+                <div class="history-item">
+                    <div class="history-icon earned">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg>
+                    </div>
+                    <div class="history-details">
+                        <div class="history-title">Campus Cleanup</div>
+                        <div class="history-date">May 15, 2025</div>
+                    </div>
+                    <div class="history-points">+50</div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-icon earned">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg>
+                    </div>
+                    <div class="history-details">
+                        <div class="history-title">Food Drive</div>
+                        <div class="history-date">June 1, 2025</div>
+                    </div>
+                    <div class="history-points">+60</div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-icon spent">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 12-7 7-7-7"></path><path d="M12 5v14"></path></svg>
+                    </div>
+                    <div class="history-details">
+                        <div class="history-title">Campus Bookstore Voucher</div>
+                        <div class="history-date">April 10, 2025</div>
+                    </div>
+                    <div class="history-points spent">-100</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

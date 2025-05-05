@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Events - VolunteerHub{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="header-content">
+        <h1>Volunteer Events</h1>
+        <p>Browse and register for upcoming volunteer opportunities</p>
+    </div>
+    <div class="header-actions">
+        {% if session.get('is_admin') %}
+        <a href="{{ url_for('add_event') }}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+            Add Event
+        </a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="events-grid">
+        {% for event in events %}
+        <div class="event-card-large">
+            <div class="event-date-large">
+                <span class="month">{{ event.date.split('-')[1] }}</span>
+                <span class="day">{{ event.date.split('-')[2] }}</span>
+                <span class="year">{{ event.date.split('-')[0] }}</span>
+            </div>
+            <div class="event-details">
+                <h3 class="event-title">{{ event.name }}</h3>
+                <p class="event-location">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    {{ event.location }}
+                </p>
+                <p class="event-points">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                    {{ event.points }} Points
+                </p>
+            </div>
+            <div class="event-actions">
+                <a href="{{ url_for('register_volunteer') }}" class="btn btn-primary">Register</a>
+                <button class="btn btn-secondary event-details-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    Details
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

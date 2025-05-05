@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Points - VolunteerHub{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="header-content">
+        <h1>Student Points</h1>
+        <p>View and manage points for all students</p>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="card">
+        <div class="card-header">
+            <div class="search-filter">
+                <div class="search-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                    <input type="text" id="pointsSearch" placeholder="Search students...">
+                </div>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="table-responsive">
+                <table class="data-table" id="pointsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student Name</th>
+                            <th>Email</th>
+                            <th>Points</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.id }}</td>
+                            <td>{{ student.name }}</td>
+                            <td>{{ student.email }}</td>
+                            <td>
+                                <div class="points-display">
+                                    <span class="points-badge">{{ student.points }}</span>
+                                </div>
+                            </td>
+                            <td class="actions-cell">
+                                <button class="action-btn" title="Add Points" onclick="openPointsModal({{ student.id }}, '{{ student.name }}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 12h8"></path><path d="M12 8v8"></path></svg>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Points Modal -->
+<div id="pointsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Adjust Points</h2>
+            <button class="close-modal" onclick="closePointsModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Adjust points for <span id="studentName"></span></p>
+            <form id="pointsForm">
+                <input type="hidden" id="studentId" name="studentId">
+                <div class="form-group">
+                    <label for="pointsAmount">Points</label>
+                    <div class="points-input-group">
+                        <button type="button" class="points-btn" onclick="decrementPoints()">-</button>
+                        <input type="number" id="pointsAmount" name="pointsAmount" value="10" min="1">
+                        <button type="button" class="points-btn" onclick="incrementPoints()">+</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="pointsReason">Reason</label>
+                    <textarea id="pointsReason" name="pointsReason" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="submitPoints()">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" onclick="closePointsModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Search functionality
+    document.getElementById('pointsSearch').addEventListener('keyup', function() {
+        const searchValue = this.value.toLowerCase();
+        const table = document.getElementById('pointsTable');
+        const rows = table.getElementsByTagName('tr');
+        
+        for (let i = 1; i < rows.length; i++) {
+            const name = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+            const email = rows[i].getElementsByTagName('td')[2].textContent.toLowerCase();
+            
+            if (name.includes(searchValue) || email.includes(searchValue)) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    });
+    
+    // Points modal functionality
+    const modal = document.getElementById('pointsModal');
+    
+    function openPointsModal(studentId, studentName) {
+        document.getElementById('studentId').value = studentId;
+        document.getElementById('studentName').textContent = studentName;
+        modal.style.display = 'flex';
+    }
+    
+    function closePointsModal() {
+        modal.style.display = 'none';
+    }
+    
+    function incrementPoints() {
+        const input = document.getElementById('pointsAmount');
+        input.value = parseInt(input.value) + 5;
+    }
+    
+    function decrementPoints() {
+        const input = document.getElementById('pointsAmount');
+        const newValue = parseInt(input.value) - 5;
+        input.value = newValue > 0 ? newValue : 1;
+    }
+    
+    function submitPoints() {
+        // In a real app, this would submit to the server
+        // For this demo, we'll just show a success message
+        alert('Points updated successfully!');
+        closePointsModal();
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            closePointsModal();
+        }
+    }
+</script>
+{% endblock %}
