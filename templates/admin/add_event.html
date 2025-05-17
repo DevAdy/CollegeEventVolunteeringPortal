@@ -18,31 +18,35 @@
 
 <section class="content-section">
     <div class="form-card">
-        <form method="post" action="{{ url_for('add_event') }}">
+        <form method="post" action="{{ url_for('add_event') }}" id="add-event-form" onsubmit="return validateForm()">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="event_name">Event Name</label>
-                    <input type="text" id="event_name" name="event_name" required>
+                    <input type="text" id="event_name" name="event_name" required placeholder="Enter event name">
+                    <div class="error-message" id="event-name-error"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="event_date">Event Date</label>
                     <input type="date" id="event_date" name="event_date" required>
+                    <div class="error-message" id="event-date-error"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="event_location">Location</label>
-                    <input type="text" id="event_location" name="event_location" required>
+                    <input type="text" id="event_location" name="event_location" required placeholder="Enter event location">
+                    <div class="error-message" id="event-location-error"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="event_points">Points</label>
-                    <input type="number" id="event_points" name="event_points" required min="1">
+                    <input type="number" id="event_points" name="event_points" required min="1" value="50">
+                    <div class="error-message" id="event-points-error"></div>
                 </div>
                 
                 <div class="form-group full-width">
                     <label for="event_description">Description</label>
-                    <textarea id="event_description" name="event_description" rows="4"></textarea>
+                    <textarea id="event_description" name="event_description" rows="4" placeholder="Enter event description (optional)"></textarea>
                 </div>
             </div>
             
@@ -53,4 +57,168 @@
         </form>
     </div>
 </section>
+
+<script>
+    // Add CSS for validation styles
+    document.head.insertAdjacentHTML('beforeend', `
+        <style>
+            .error-message {
+                color: #e74c3c;
+                font-size: 0.85rem;
+                margin-top: 5px;
+                display: none;
+            }
+        </style>
+    `);
+
+    // Set min date to today for event_date
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const todayFormatted = `${yyyy}-${mm}-${dd}`;
+    
+    document.getElementById('event_date').setAttribute('min', todayFormatted);
+
+    // Validate event name
+    function validateEventName(name) {
+        if (!name) {
+            return { valid: false, message: "Event name is required" };
+        }
+        
+        if (name.length < 3) {
+            return { valid: false, message: "Event name must be at least 3 characters long" };
+        }
+        
+        return { valid: true };
+    }
+    
+    // Validate event date
+    function validateEventDate(date) {
+        if (!date) {
+            return { valid: false, message: "Event date is required" };
+        }
+        
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        if (selectedDate < today) {
+            return { valid: false, message: "Event date must be in the future" };
+        }
+        
+        return { valid: true };
+    }
+    
+    // Validate location
+    function validateLocation(location) {
+        if (!location) {
+            return { valid: false, message: "Location is required" };
+        }
+        
+        if (location.length < 3) {
+            return { valid: false, message: "Location must be at least 3 characters long" };
+        }
+        
+        return { valid: true };
+    }
+    
+    // Validate points
+    function validatePoints(points) {
+        if (!points) {
+            return { valid: false, message: "Points are required" };
+        }
+        
+        const pointsNum = parseInt(points);
+        if (isNaN(pointsNum) || pointsNum <= 0) {
+            return { valid: false, message: "Points must be a positive number" };
+        }
+        
+        return { valid: true };
+    }
+    
+    // Add input event listeners for real-time validation
+    document.getElementById('event_name').addEventListener('input', function() {
+        const result = validateEventName(this.value);
+        const errorElement = document.getElementById('event-name-error');
+        
+        errorElement.style.display = result.valid ? 'none' : 'block';
+        errorElement.textContent = result.message || '';
+    });
+    
+    document.getElementById('event_date').addEventListener('change', function() {
+        const result = validateEventDate(this.value);
+        const errorElement = document.getElementById('event-date-error');
+        
+        errorElement.style.display = result.valid ? 'none' : 'block';
+        errorElement.textContent = result.message || '';
+    });
+    
+    document.getElementById('event_location').addEventListener('input', function() {
+        const result = validateLocation(this.value);
+        const errorElement = document.getElementById('event-location-error');
+        
+        errorElement.style.display = result.valid ? 'none' : 'block';
+        errorElement.textContent = result.message || '';
+    });
+    
+    document.getElementById('event_points').addEventListener('input', function() {
+        const result = validatePoints(this.value);
+        const errorElement = document.getElementById('event-points-error');
+        
+        errorElement.style.display = result.valid ? 'none' : 'block';
+        errorElement.textContent = result.message || '';
+    });
+    
+    // Form submission validation
+    function validateForm() {
+        let isValid = true;
+        
+        // Validate event name
+        const eventName = document.getElementById('event_name').value;
+        const nameResult = validateEventName(eventName);
+        const nameError = document.getElementById('event-name-error');
+        
+        if (!nameResult.valid) {
+            nameError.style.display = 'block';
+            nameError.textContent = nameResult.message;
+            isValid = false;
+        }
+        
+        // Validate event date
+        const eventDate = document.getElementById('event_date').value;
+        const dateResult = validateEventDate(eventDate);
+        const dateError = document.getElementById('event-date-error');
+        
+        if (!dateResult.valid) {
+            dateError.style.display = 'block';
+            dateError.textContent = dateResult.message;
+            isValid = false;
+        }
+        
+        // Validate location
+        const eventLocation = document.getElementById('event_location').value;
+        const locationResult = validateLocation(eventLocation);
+        const locationError = document.getElementById('event-location-error');
+        
+        if (!locationResult.valid) {
+            locationError.style.display = 'block';
+            locationError.textContent = locationResult.message;
+            isValid = false;
+        }
+        
+        // Validate points
+        const eventPoints = document.getElementById('event_points').value;
+        const pointsResult = validatePoints(eventPoints);
+        const pointsError = document.getElementById('event-points-error');
+        
+        if (!pointsResult.valid) {
+            pointsError.style.display = 'block';
+            pointsError.textContent = pointsResult.message;
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+</script>
 {% endblock %}

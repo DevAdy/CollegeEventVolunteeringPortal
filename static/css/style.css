@@ -1495,3 +1495,51 @@ textarea {
   font-size: 1rem;
   margin-bottom: 0.25rem;
 }
+/* Inline Form */
+.inline-form {
+  display: flex;
+  align-items: center;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-group input {
+  border-radius: var(--radius) 0 0 var(--radius);
+  flex: 1;
+}
+
+.input-group button {
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-left: -1px;
+}
+
+/* Event/Student Meta */
+.event-meta, .student-meta {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+.event-meta span, .student-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.completed-text {
+  color: var(--success);
+  font-weight: 500;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--muted-foreground);
+}
