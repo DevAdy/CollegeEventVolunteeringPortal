@@ -18,21 +18,23 @@
 
 <section class="content-section">
     <div class="form-card">
-        <form method="post" action="{{ url_for('add_reward') }}">
+        <form method="post" action="{{ url_for('add_reward') }}" id="add-reward-form" onsubmit="return validateForm()">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="reward_name">Reward Name</label>
-                    <input type="text" id="reward_name" name="reward_name" required>
+                    <input type="text" id="reward_name" name="reward_name" required placeholder="Enter reward name">
+                    <div class="error-message" id="reward-name-error"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="points_required">Points Required</label>
-                    <input type="number" id="points_required" name="points_required" required min="1">
+                    <input type="number" id="points_required" name="points_required" required min="1" value="50" placeholder="Enter points required">
+                    <div class="error-message" id="points-required-error"></div>
                 </div>
                 
                 <div class="form-group full-width">
                     <label for="reward_description">Description</label>
-                    <textarea id="reward_description" name="reward_description" rows="4"></textarea>
+                    <textarea id="reward_description" name="reward_description" rows="4" placeholder="Enter reward description (optional)"></textarea>
                 </div>
             </div>
             
@@ -43,4 +45,91 @@
         </form>
     </div>
 </section>
+
+<script>
+    // Add CSS for validation styles
+    document.head.insertAdjacentHTML('beforeend', `
+        <style>
+            .error-message {
+                color: #e74c3c;
+                font-size: 0.85rem;
+                margin-top: 5px;
+                display: none;
+            }
+        </style>
+    `);
+
+    // Validate reward name
+    function validateRewardName(name) {
+        if (!name) {
+            return { valid: false, message: "Reward name is required" };
+        }
+        
+        if (name.length < 3) {
+            return { valid: false, message: "Reward name must be at least 3 characters long" };
+        }
+        
+        return { valid: true };
+    }
+    
+    // Validate points required
+    function validatePointsRequired(points) {
+        if (!points) {
+            return { valid: false, message: "Points required is required" };
+        }
+        
+        const pointsNum = parseInt(points);
+        if (isNaN(pointsNum) || pointsNum <= 0) {
+            return { valid: false, message: "Points required must be a positive number" };
+        }
+        
+        return { valid: true };
+    }
+    
+    // Add input event listeners for real-time validation
+    document.getElementById('reward_name').addEventListener('input', function() {
+        const result = validateRewardName(this.value);
+        const errorElement = document.getElementById('reward-name-error');
+        
+        errorElement.style.display = result.valid ? 'none' : 'block';
+        errorElement.textContent = result.message || '';
+    });
+    
+    document.getElementById('points_required').addEventListener('input', function() {
+        const result = validatePointsRequired(this.value);
+        const errorElement = document.getElementById('points-required-error');
+        
+        errorElement.style.display = result.valid ? 'none' : 'block';
+        errorElement.textContent = result.message || '';
+    });
+    
+    // Form submission validation
+    function validateForm() {
+        let isValid = true;
+        
+        // Validate reward name
+        const rewardName = document.getElementById('reward_name').value;
+        const nameResult = validateRewardName(rewardName);
+        const nameError = document.getElementById('reward-name-error');
+        
+        if (!nameResult.valid) {
+            nameError.style.display = 'block';
+            nameError.textContent = nameResult.message;
+            isValid = false;
+        }
+        
+        // Validate points required
+        const pointsRequired = document.getElementById('points_required').value;
+        const pointsResult = validatePointsRequired(pointsRequired);
+        const pointsError = document.getElementById('points-required-error');
+        
+        if (!pointsResult.valid) {
+            pointsError.style.display = 'block';
+            pointsError.textContent = pointsResult.message;
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+</script>
 {% endblock %}

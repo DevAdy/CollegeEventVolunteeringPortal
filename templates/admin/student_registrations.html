@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Registrations - VolunteerHub{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="header-content">
+        <h1>{{ student.name }}'s Registrations</h1>
+        <p>View all events this student has registered for</p>
+        <div class="student-meta">
+            <span class="student-email">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                {{ student.email }}
+            </span>
+            <span class="student-points">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                {{ student.points }} Points
+            </span>
+        </div>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('student_list') }}" class="btn btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+            Back to Students
+        </a>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="card">
+        <div class="card-header">
+            <h2>Event Registrations ({{ registrations|length }})</h2>
+        </div>
+        <div class="card-content">
+            {% if registrations %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Points</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registration in registrations %}
+                        <tr>
+                            <td>{{ registration.event.name }}</td>
+                            <td>{{ registration.event.date }}</td>
+                            <td>
+                                <form action="{{ url_for('update_volunteer_role', registration_id=registration.id) }}" method="post" class="inline-form">
+                                    <input type="hidden" name="student_id" value="{{ student.id }}">
+                                    <div class="input-group">
+                                        <input type="text" name="role" value="{{ registration.role_assigned or '' }}" placeholder="Assign role">
+                                        <button type="submit" class="btn btn-sm btn-outline">Update</button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td>
+                                <span class="status-badge {{ registration.status.lower() }}">{{ registration.status }}</span>
+                            </td>
+                            <td>{{ registration.event.points }}</td>
+                            <td class="actions-cell">
+                                {% if registration.status == 'Pending' %}
+                                <form action="{{ url_for('complete_registration', registration_id=registration.id) }}" method="post">
+                                    <input type="hidden" name="student_id" value="{{ student.id }}">
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        Complete
+                                    </button>
+                                </form>
+                                {% else %}
+                                <span class="completed-text">Completed</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <p>This student hasn't registered for any events yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

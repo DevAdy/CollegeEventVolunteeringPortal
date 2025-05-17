@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Volunteers - VolunteerHub{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="header-content">
+        <h1>{{ event.name }} - Volunteers</h1>
+        <p>Manage volunteer registrations for this event</p>
+        <div class="event-meta">
+            <span class="event-date">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                {{ event.date }}
+            </span>
+            <span class="event-location">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                {{ event.location }}
+            </span>
+            <span class="event-points">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                {{ event.points }} Points
+            </span>
+        </div>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('event_list') }}" class="btn btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+            Back to Events
+        </a>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="card">
+        <div class="card-header">
+            <h2>Registered Volunteers ({{ volunteers|length }})</h2>
+        </div>
+        <div class="card-content">
+            {% if volunteers %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Registered On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for volunteer in volunteers %}
+                        <tr>
+                            <td>{{ volunteer.student.name }}</td>
+                            <td>{{ volunteer.student.email }}</td>
+                            <td>
+                                <form action="{{ url_for('update_volunteer_role', registration_id=volunteer.id) }}" method="post" class="inline-form">
+                                    <input type="hidden" name="event_id" value="{{ event.id }}">
+                                    <div class="input-group">
+                                        <input type="text" name="role" value="{{ volunteer.role_assigned or '' }}" placeholder="Assign role">
+                                        <button type="submit" class="btn btn-sm btn-outline">Update</button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td>
+                                <span class="status-badge {{ volunteer.status.lower() }}">{{ volunteer.status }}</span>
+                            </td>
+                            <td>{{ volunteer.created_at }}</td>
+                            <td class="actions-cell">
+                                {% if volunteer.status == 'Pending' %}
+                                <form action="{{ url_for('complete_registration', registration_id=volunteer.id) }}" method="post">
+                                    <input type="hidden" name="event_id" value="{{ event.id }}">
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        Complete
+                                    </button>
+                                </form>
+                                {% else %}
+                                <span class="completed-text">Completed</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <p>No volunteers have registered for this event yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
