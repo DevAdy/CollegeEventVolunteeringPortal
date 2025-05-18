@@ -276,8 +276,9 @@ def get_user(user_id):
     
     return None
 
+# Modify this function in db.py
 def get_all_students():
-    """Get all students"""
+    """Get all students excluding the admin"""
     conn = get_db_connection()
     cursor = conn.cursor()
     
@@ -285,6 +286,7 @@ def get_all_students():
     SELECT s.*, p.total_points 
     FROM students s
     LEFT JOIN points p ON s.id = p.student_id
+    WHERE s.email != 'admin@volunteerhub.com'  -- Exclude admin user
     ORDER BY s.name
     ''')
     
@@ -861,7 +863,7 @@ def redeem_reward(student_id, reward_id, notes=None):
         return False, str(e)
     finally:
         conn.close()
-                
+
 # Update this function in db.py
 def get_student_points_history(student_id):
     """Get a detailed history of points earned and spent by a student"""
@@ -949,18 +951,20 @@ def get_student_points_history(student_id):
     return all_history
 
 # Add this function to db.py
+# Modify this function in db.py
 def get_students_detailed():
-    """Get all students with their registration details"""
+    """Get all students with their registration details (excluding admin)"""
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # Joining students with points table
+    # Joining students with points table, excluding admin
     cursor.execute('''
     SELECT 
         s.id, s.name, s.email, s.phone, s.created_at, 
         p.total_points
     FROM students s
     LEFT JOIN points p ON s.id = p.student_id
+    WHERE s.email != 'admin@volunteerhub.com'  -- Exclude admin user
     ORDER BY s.name
     ''')
     
