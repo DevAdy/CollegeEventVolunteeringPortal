@@ -90,7 +90,16 @@ def init_db():
         FOREIGN KEY (reward_id) REFERENCES rewards (id)
     )
     ''')
-    
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS points_adjustments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        student_id INTEGER NOT NULL,
+        points_amount INTEGER NOT NULL,
+        reason TEXT,
+        adjusted_at TIMESTAMP,
+        FOREIGN KEY (student_id) REFERENCES students (id)
+    )
+    ''')
     # Add admin user if not exists
     cursor.execute('SELECT * FROM students WHERE email = ?', ('admin@volunteerhub.com',))
     admin = cursor.fetchone()
@@ -779,6 +788,366 @@ def update_volunteer_role(registration_id, role):
     finally:
         conn.close()
 
+# Add this function before the init_db() call
+# Modified redeem_reward function in db.py
+def redeem_reward(student_id, reward_id, notes=None):
+    """Process a reward redemption by a student"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Get student's available points
+        cursor.execute('SELECT total_points FROM points WHERE student_id = ?', (student_id,))
+        student_points = cursor.fetchone()
+        
+        if not student_points:
+            return False, "Student points record not found"
+        
+        available_points = student_points['total_points'] or 0
+        
+        # Get reward details
+        cursor.execute('SELECT points_required, name FROM rewards WHERE id = ?', (reward_id,))
+        reward = cursor.fetchone()
+        
+        if not reward:
+            return False, "Reward not found"
+        
+        points_required = reward['points_required']
+        reward_name = reward['name']
+        
+        # FINAL SAFETY CHECK - Prevent negative points
+        if available_points < points_required:
+            conn.close()
+            return False, f"Insufficient points. Need {points_required}, have {available_points}."
+        
+        # Process the redemption
+        # 1. Create redemption record
+        today = datetime.now().strftime('%Y-%m-%d')
+        cursor.execute('''
+        INSERT INTO redemptions (student_id, reward_id, date, created_at)
+        VALUES (?, ?, ?, ?)
+        ''', (student_id, reward_id, today, datetime.now()))
+        
+        redemption_id = cursor.lastrowid
+        
+        # 2. Calculate new points balance
+        new_points = available_points - points_required
+        
+        # 3. Another safety check before updating
+        if new_points < 0:
+            # Roll back the transaction
+            conn.rollback()
+            conn.close()
+            return False, "Transaction would result in negative points balance"
+            
+        # 4. Update points
+        cursor.execute('''
+        UPDATE points 
+        SET total_points = ?, last_updated = ?
+        WHERE student_id = ?
+        ''', (new_points, datetime.now(), student_id))
+        
+        conn.commit()
+        return True, {
+            'redemption_id': redemption_id,
+            'reward_name': reward_name,
+            'points_used': points_required,
+            'remaining_points': new_points
+        }
+    except Exception as e:
+        print(f"Error redeeming reward: {e}")
+        # Ensure we roll back the transaction on error
+        conn.rollback()
+        return False, str(e)
+    finally:
+        conn.close()
+                
+# Update this function in db.py
+def get_student_points_history(student_id):
+    """Get a detailed history of points earned and spent by a student"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Get points earned from completed volunteer activities
+    cursor.execute('''
+    SELECT 
+        r.id, 
+        e.name as activity_name, 
+        r.status, 
+        e.points as points_earned, 
+        r.created_at as date,
+        'earned' as type
+    FROM registrations r
+    JOIN events e ON r.event_id = e.id
+    WHERE r.student_id = ? AND r.status = 'Completed'
+    ''', (student_id,))
+    
+    earned_points = [dict(row) for row in cursor.fetchall()]
+    
+    # Get points spent on redemptions
+    cursor.execute('''
+    SELECT 
+        rd.id, 
+        rw.name as activity_name, 
+        'Completed' as status,
+        rw.points_required as points_spent, 
+        rd.date,
+        'spent' as type
+    FROM redemptions rd
+    JOIN rewards rw ON rd.reward_id = rw.id
+    WHERE rd.student_id = ?
+    ''', (student_id,))
+    
+    spent_points = [dict(row) for row in cursor.fetchall()]
+    
+    # Combine the results
+    all_history = earned_points + spent_points
+    
+    # Convert all dates to datetime objects for consistent sorting
+    for item in all_history:
+        # Skip if date is None
+        if item['date'] is None:
+            item['date'] = datetime.now()  # Use current time as fallback
+            continue
+            
+        # If it's already a datetime object, keep it as is
+        if isinstance(item['date'], datetime):
+            continue
+            
+        # For string dates, try to parse based on expected formats
+        if isinstance(item['date'], str):
+            try:
+                # Try ISO format (YYYY-MM-DD)
+                if re.match(r'^\d{4}-\d{2}-\d{2}$', item['date']):
+                    item['date'] = datetime.strptime(item['date'], '%Y-%m-%d')
+                # Try timestamp format from SQLite
+                else:
+                    # Try various formats that SQLite might return
+                    formats = [
+                        '%Y-%m-%d %H:%M:%S',  # Standard SQLite timestamp
+                        '%Y-%m-%d %H:%M:%S.%f',  # With microseconds
+                        '%Y-%m-%d',  # Just date
+                    ]
+                    
+                    for fmt in formats:
+                        try:
+                            item['date'] = datetime.strptime(item['date'], fmt)
+                            break
+                        except ValueError:
+                            continue
+                    else:
+                        # If all parsing attempts failed, use current time
+                        item['date'] = datetime.now()
+            except Exception:
+                # If any error occurs during parsing, use current time
+                item['date'] = datetime.now()
+    
+    # Sort by date (most recent first)
+    all_history.sort(key=lambda x: x['date'], reverse=True)
+    
+    conn.close()
+    return all_history
+
+# Add this function to db.py
+def get_students_detailed():
+    """Get all students with their registration details"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Joining students with points table
+    cursor.execute('''
+    SELECT 
+        s.id, s.name, s.email, s.phone, s.created_at, 
+        p.total_points
+    FROM students s
+    LEFT JOIN points p ON s.id = p.student_id
+    ORDER BY s.name
+    ''')
+    
+    students = []
+    for row in cursor.fetchall():
+        # Basic student info
+        student = {
+            'id': row['id'],
+            'name': row['name'],
+            'email': row['email'],
+            'phone': row['phone'] or 'Not provided',
+            'created_at': row['created_at'],
+            'points': row['total_points'] or 0,
+            'latest_registration': None
+        }
+        
+        # Get latest registration info for this student
+        cursor.execute('''
+        SELECT 
+            r.id, r.status, r.role_assigned, r.created_at,
+            e.id as event_id, e.name as event_name
+        FROM registrations r
+        JOIN events e ON r.event_id = e.id
+        WHERE r.student_id = ?
+        ORDER BY r.created_at DESC
+        LIMIT 1
+        ''', (row['id'],))
+        
+        latest_reg = cursor.fetchone()
+        if latest_reg:
+            student['latest_registration'] = {
+                'id': latest_reg['id'],
+                'status': latest_reg['status'],
+                'role': latest_reg['role_assigned'] or 'Not assigned',
+                'created_at': latest_reg['created_at'],
+                'event_id': latest_reg['event_id'],
+                'event_name': latest_reg['event_name']
+            }
+        
+        students.append(student)
+    
+    conn.close()
+    return students
+
+# Add this function to db.py
+def adjust_student_points(student_id, points_amount, reason=None):
+    """
+    Manually adjust a student's points (add or subtract)
+    Returns: (success, new_total_points)
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Check if student exists
+        cursor.execute('SELECT id FROM students WHERE id = ?', (student_id,))
+        student = cursor.fetchone()
+        if not student:
+            return False, "Student not found"
+        
+        # Get current points
+        cursor.execute('SELECT total_points FROM points WHERE student_id = ?', (student_id,))
+        result = cursor.fetchone()
+        
+        if result:
+            current_points = result['total_points'] or 0
+            new_total = current_points + points_amount
+            
+            # Ensure points don't go negative
+            if new_total < 0:
+                return False, "Cannot reduce points below zero"
+            
+            # Update points
+            cursor.execute('''
+            UPDATE points 
+            SET total_points = ?, last_updated = ?
+            WHERE student_id = ?
+            ''', (new_total, datetime.now(), student_id))
+        else:
+            # Create points record if it doesn't exist
+            if points_amount < 0:
+                return False, "Cannot reduce points below zero"
+                
+            cursor.execute('''
+            INSERT INTO points (student_id, total_points, last_updated)
+            VALUES (?, ?, ?)
+            ''', (student_id, points_amount, datetime.now()))
+            new_total = points_amount
+        
+        # Log the points adjustment (if you want to track history)
+        # This is optional but recommended for audit purposes
+        if reason:
+            cursor.execute('''
+            INSERT INTO points_adjustments (student_id, points_amount, reason, adjusted_at)
+            VALUES (?, ?, ?, ?)
+            ''', (student_id, points_amount, reason, datetime.now()))
+        
+        conn.commit()
+        return True, new_total
+    except Exception as e:
+        print(f"Error adjusting points: {e}")
+        return False, str(e)
+    finally:
+        conn.close()
+
+# Add this function to db.py near the create_user function
+def update_student(student_id, name, email, phone=None, password=None, points=None):
+    """Update student information and points"""
+    # First validate inputs
+    name_valid, name_msg = is_valid_name(name)
+    if not name_valid:
+        return False, name_msg
+        
+    if not is_valid_email(email):
+        return False, "Invalid email format"
+        
+    if phone:
+        phone_valid, phone_msg = is_valid_phone(phone)
+        if not phone_valid:
+            return False, phone_msg
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Check if student exists
+        cursor.execute('SELECT id FROM students WHERE id = ?', (student_id,))
+        student = cursor.fetchone()
+        if not student:
+            return False, "Student not found"
+        
+        # Check if email is already used by another student
+        cursor.execute('SELECT id FROM students WHERE email = ? AND id != ?', (email, student_id))
+        existing_email = cursor.fetchone()
+        if existing_email:
+            return False, "Email already in use by another account"
+        
+        # Update student information
+        if password:
+            # Hash the new password
+            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+            cursor.execute('''
+            UPDATE students 
+            SET name = ?, email = ?, phone = ?, password = ?
+            WHERE id = ?
+            ''', (name, email, phone, hashed_password, student_id))
+        else:
+            # Update without changing password
+            cursor.execute('''
+            UPDATE students 
+            SET name = ?, email = ?, phone = ?
+            WHERE id = ?
+            ''', (name, email, phone, student_id))
+        
+        # Update points if provided
+        if points is not None:
+            # Convert to integer
+            try:
+                points = int(points)
+                if points < 0:
+                    points = 0
+            except ValueError:
+                points = 0
+                
+            # Check if points record exists
+            cursor.execute('SELECT student_id FROM points WHERE student_id = ?', (student_id,))
+            points_record = cursor.fetchone()
+            
+            if points_record:
+                cursor.execute('''
+                UPDATE points 
+                SET total_points = ?, last_updated = ?
+                WHERE student_id = ?
+                ''', (points, datetime.now(), student_id))
+            else:
+                cursor.execute('''
+                INSERT INTO points (student_id, total_points, last_updated)
+                VALUES (?, ?, ?)
+                ''', (student_id, points, datetime.now()))
+        
+        conn.commit()
+        return True, "Student updated successfully"
+    except Exception as e:
+        print(f"Error updating student: {e}")
+        return False, str(e)
+    finally:
+        conn.close()
 
 # Initialize the database when this module is imported
 init_db()

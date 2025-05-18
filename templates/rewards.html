@@ -14,6 +14,11 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
             Add Reward
         </a>
+        {% elif session.get('is_user') %}
+        <a href="{{ url_for('redeem_reward') }}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8a2.83 2.83 0 0 0 4 4 4 4 0 1 1-4-4"></path><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.9 4.9 1.4 1.4"></path><path d="m17.7 17.7 1.4 1.4"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.3 17.7-1.4 1.4"></path><path d="m19.1 4.9-1.4 1.4"></path></svg>
+            Redeem New Reward
+        </a>
         {% endif %}
     </div>
 </section>
@@ -39,12 +44,63 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
                     {{ reward.points_required }} Points Required
                 </p>
+                {% if reward.description %}
+                <p class="reward-description">{{ reward.description }}</p>
+                {% endif %}
             </div>
             <div class="reward-actions">
-                <a href="{{ url_for('redeem_reward') }}" class="btn btn-primary">Redeem</a>
+                <a href="{{ url_for('redeem_reward') }}?reward_id={{ reward.id }}" class="btn btn-primary">Redeem</a>
             </div>
         </div>
         {% endfor %}
     </div>
 </section>
+
+{% if session.get('is_user') and user %}
+<!-- Redemption History Section -->
+<section class="content-section">
+    <div class="section-header">
+        <h2>Redemption History</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-content">
+            {% if redemptions %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Reward</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for redemption in redemptions[:5] %}  <!-- Show only the latest 5 redemptions -->
+                        <tr>
+                            <td>{{ redemption.id }}</td>
+                            <td>{{ redemption.reward_name }}</td>
+                            <td>{{ redemption.date }}</td>
+                            <td>
+                                <span class="status-badge completed">Completed</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8a2.83 2.83 0 0 0 4 4 4 4 0 1 1-4-4"></path><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.9 4.9 1.4 1.4"></path><path d="m17.7 17.7 1.4 1.4"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.3 17.7-1.4 1.4"></path><path d="m19.1 4.9-1.4 1.4"></path></svg>
+                </div>
+                <h3>No Redemptions Yet</h3>
+                <p>You haven't redeemed any rewards yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
 {% endblock %}

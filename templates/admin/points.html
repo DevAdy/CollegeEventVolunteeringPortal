@@ -66,7 +66,7 @@
         </div>
         <div class="modal-body">
             <p>Adjust points for <span id="studentName"></span></p>
-            <form id="pointsForm">
+            <form id="pointsForm" method="post" action="{{ url_for('adjust_points') }}">
                 <input type="hidden" id="studentId" name="studentId">
                 <div class="form-group">
                     <label for="pointsAmount">Points</label>
@@ -75,13 +75,14 @@
                         <input type="number" id="pointsAmount" name="pointsAmount" value="10" min="1">
                         <button type="button" class="points-btn" onclick="incrementPoints()">+</button>
                     </div>
+                    <div class="form-hint">Enter a positive number to add points, negative to subtract</div>
                 </div>
                 <div class="form-group">
                     <label for="pointsReason">Reason</label>
-                    <textarea id="pointsReason" name="pointsReason" rows="3"></textarea>
+                    <textarea id="pointsReason" name="pointsReason" rows="3" placeholder="Explain why points are being adjusted"></textarea>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-primary" onclick="submitPoints()">Save Changes</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
                     <button type="button" class="btn btn-secondary" onclick="closePointsModal()">Cancel</button>
                 </div>
             </form>
@@ -114,6 +115,8 @@
     function openPointsModal(studentId, studentName) {
         document.getElementById('studentId').value = studentId;
         document.getElementById('studentName').textContent = studentName;
+        document.getElementById('pointsAmount').value = 10; // Reset to default
+        document.getElementById('pointsReason').value = ''; // Clear reason
         modal.style.display = 'flex';
     }
     
@@ -129,15 +132,26 @@
     function decrementPoints() {
         const input = document.getElementById('pointsAmount');
         const newValue = parseInt(input.value) - 5;
-        input.value = newValue > 0 ? newValue : 1;
+        input.value = newValue;
     }
     
-    function submitPoints() {
-        // In a real app, this would submit to the server
-        // For this demo, we'll just show a success message
-        alert('Points updated successfully!');
-        closePointsModal();
-    }
+    // Add form validation
+    document.getElementById('pointsForm').addEventListener('submit', function(e) {
+        const pointsAmount = document.getElementById('pointsAmount').value;
+        const pointsReason = document.getElementById('pointsReason').value;
+        
+        if (!pointsAmount) {
+            e.preventDefault();
+            alert('Please enter a points value.');
+            return;
+        }
+        
+        if (!pointsReason || pointsReason.trim().length < 3) {
+            e.preventDefault();
+            alert('Please provide a reason for adjusting points (minimum 3 characters).');
+            return;
+        }
+    });
     
     // Close modal when clicking outside
     window.onclick = function(event) {

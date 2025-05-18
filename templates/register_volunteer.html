@@ -26,7 +26,7 @@
                     <select id="student" name="student" required>
                         <option value="">Select a student</option>
                         {% for student in students %}
-                        <option value="{{ student.id }}">{{ student.name }}</option>
+                        <option value="{{ student.id }}" {% if pre_selected_student and student.id|string == pre_selected_student|string %}selected{% endif %}>{{ student.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -37,7 +37,7 @@
                     <select id="event" name="event" required>
                         <option value="">Select an event</option>
                         {% for event in events %}
-                        <option value="{{ event.id }}">{{ event.name }} ({{ event.date }}) - {{ event.points }} points</option>
+                        <option value="{{ event.id }}" {% if pre_selected_event and event.id|string == pre_selected_event|string %}selected{% endif %}>{{ event.name }} ({{ event.date }}) - {{ event.points }} points</option>
                         {% endfor %}
                     </select>
                 </div>
