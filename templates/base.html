@@ -33,7 +33,8 @@
                     <a href="{{ url_for('event_list') }}" class="nav-link">Events</a>
                     <a href="{{ url_for('my_points') }}" class="nav-link">My Points</a>
                     <a href="{{ url_for('rewards_list') }}" class="nav-link">Rewards</a>
-                    <a href="{{ url_for('my_redemptions') }}" class="nav-link">My Redemptions</a>
+                {% else %}
+                    <!-- Empty else block -->
                 {% endif %}
             </div>
             <div class="navbar-actions">
@@ -83,7 +84,8 @@
                 <a href="{{ url_for('event_list') }}" class="mobile-nav-link">Events</a>
                 <a href="{{ url_for('my_points') }}" class="mobile-nav-link">My Points</a>
                 <a href="{{ url_for('rewards_list') }}" class="mobile-nav-link">Rewards</a>
-                <a href="{{ url_for('my_redemptions') }}" class="mobile-nav-link">My Redemptions</a>
+            {% else %}
+                <!-- Empty else block -->
             {% endif %}
             
             {% if session.get('user_id') %}

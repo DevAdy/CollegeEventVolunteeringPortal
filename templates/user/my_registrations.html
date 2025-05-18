@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}My Volunteer Registrations - VolunteerHub{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="header-content">
+        <h1>My Volunteer Registrations</h1>
+        <p>View the status and details of all your volunteer event registrations</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('event_list') }}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+            Register for More Events
+        </a>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="card">
+        <div class="card-header">
+            <h2>My Event Registrations ({{ registrations|length }})</h2>
+        </div>
+        <div class="card-content">
+            {% if registrations %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Location</th>
+                            <th>Role Assigned</th>
+                            <th>Status</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registration in registrations %}
+                        <tr>
+                            <td>{{ registration.event.name }}</td>
+                            <td>{{ registration.event.date }}</td>
+                            <td>{{ registration.event.location }}</td>
+                            <td>
+                                {% if registration.role_assigned %}
+                                <span class="role-badge">{{ registration.role_assigned }}</span>
+                                {% else %}
+                                <span class="muted-text">Not yet assigned</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="status-badge {{ registration.status.lower() }}">{{ registration.status }}</span>
+                            </td>
+                            <td>
+                                <div class="points-display">
+                                    <span class="points-badge">{{ registration.event.points }}</span>
+                                    {% if registration.status == 'Completed' %}
+                                    <span class="completed-text">Earned</span>
+                                    {% else %}
+                                    <span class="muted-text">Pending</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <p>You haven't registered for any events yet.</p>
+                <a href="{{ url_for('event_list') }}" class="btn btn-primary">Browse Events</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

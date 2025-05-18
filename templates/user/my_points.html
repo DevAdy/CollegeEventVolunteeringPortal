@@ -38,16 +38,40 @@
                             <th>Event Name</th>
                             <th>Date</th>
                             <th>Location</th>
-                            <th>Points Earned</th>
+                            <th>Role Assigned</th>
+                            <th>Status</th>
+                            <th>Points</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for event in registered_events %}
+                        {% for registration in registered_events %}
                         <tr>
-                            <td>{{ event.name }}</td>
-                            <td>{{ event.date }}</td>
-                            <td>{{ event.location }}</td>
-                            <td>{{ event.points }}</td>
+                            <td>{{ registration.event.name }}</td>
+                            <td>{{ registration.event.date }}</td>
+                            <td>{{ registration.event.location }}</td>
+                            <td>
+                                {% if registration.role_assigned %}
+                                {{ registration.role_assigned }}
+                                {% else %}
+                                <span class="text-muted">Not assigned</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if registration.status == 'Completed' %}
+                                <span class="status-badge completed">Completed</span>
+                                {% elif registration.status == 'Pending' %}
+                                <span class="status-badge pending">Pending</span>
+                                {% else %}
+                                <span class="status-badge">{{ registration.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if registration.status == 'Completed' %}
+                                {{ registration.event.points }}
+                                {% else %}
+                                Pending
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -74,38 +98,40 @@
         </div>
         <div class="card-content">
             <div class="points-history">
-                <div class="history-item">
-                    <div class="history-icon earned">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg>
+                {% if points_history %}
+                    {% for item in points_history %}
+                        <div class="history-item">
+                            <div class="history-icon {% if item.type == 'earned' %}earned{% else %}spent{% endif %}">
+                                {% if item.type == 'earned' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg>
+                                {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 12-7 7-7-7"></path><path d="M12 5v14"></path></svg>
+                                {% endif %}
+                            </div>
+                            <div class="history-details">
+                                <div class="history-title">{{ item.activity_name }}</div>
+                                <div class="history-date">
+                                    {% if item.date is string %}
+                                        {{ item.date }}
+                                    {% else %}
+                                        {{ item.date.strftime('%b %d, %Y') }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="history-points {% if item.type == 'spent' %}spent{% endif %}">
+                                {% if item.type == 'earned' %}+{{ item.points_earned }}{% else %}-{{ item.points_spent }}{% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+                        </div>
+                        <h3>No Points History</h3>
+                        <p>You haven't earned or spent any points yet.</p>
                     </div>
-                    <div class="history-details">
-                        <div class="history-title">Campus Cleanup</div>
-                        <div class="history-date">May 15, 2025</div>
-                    </div>
-                    <div class="history-points">+50</div>
-                </div>
-                
-                <div class="history-item">
-                    <div class="history-icon earned">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg>
-                    </div>
-                    <div class="history-details">
-                        <div class="history-title">Food Drive</div>
-                        <div class="history-date">June 1, 2025</div>
-                    </div>
-                    <div class="history-points">+60</div>
-                </div>
-                
-                <div class="history-item">
-                    <div class="history-icon spent">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 12-7 7-7-7"></path><path d="M12 5v14"></path></svg>
-                    </div>
-                    <div class="history-details">
-                        <div class="history-title">Campus Bookstore Voucher</div>
-                        <div class="history-date">April 10, 2025</div>
-                    </div>
-                    <div class="history-points spent">-100</div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>

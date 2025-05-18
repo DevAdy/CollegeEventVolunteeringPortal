@@ -88,6 +88,75 @@
         {% endfor %}
     {% endif %}
     
+    // Disable form submission by default until we verify points
+    window.onload = function() {
+        document.getElementById('redeemBtn').disabled = true;
+        
+        // Initialize the form
+        if (document.getElementById('student')) {
+            updateAvailablePoints();
+        }
+        updateRequiredPoints();
+        
+        // Pre-select reward if specified
+        {% if pre_selected_reward %}
+            const rewardSelect = document.getElementById('reward');
+            if (rewardSelect) {
+                rewardSelect.value = "{{ pre_selected_reward }}";
+                updateRequiredPoints();
+            }
+        {% endif %}
+    };
+    
+    // Updated form validation with stricter checks
+    document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Always prevent default first, then decide whether to submit
+        
+        // For admin users, check if a student is selected
+        const studentSelect = document.getElementById('student');
+        if (studentSelect && {% if session.get('is_admin') %}true{% else %}false{% endif %}) {
+            if (!studentSelect.value) {
+                alert('Please select a student.');
+                return false;
+            }
+        }
+        
+        // Check if a reward is selected
+        const rewardSelect = document.getElementById('reward');
+        if (!rewardSelect.value) {
+            alert('Please select a reward.');
+            return false;
+        }
+        
+        // Double-check point calculations
+        calculatePoints();
+        
+        // Final verification before submission
+        if (availablePoints < requiredPoints) {
+            alert(`Insufficient points. You need ${requiredPoints} points but only have ${availablePoints}.`);
+            return false;
+        }
+        
+        // All validation passed, submit the form
+        this.submit();
+    });
+    
+    function calculatePoints() {
+        // Recalculate available points
+        if (document.getElementById('student')) {
+            const studentSelect = document.getElementById('student');
+            const selectedOption = studentSelect.options[studentSelect.selectedIndex];
+            availablePoints = selectedOption && selectedOption.value ? 
+                parseInt(selectedOption.getAttribute('data-points')) : 0;
+        }
+        
+        // Recalculate required points
+        const rewardSelect = document.getElementById('reward');
+        const selectedReward = rewardSelect.options[rewardSelect.selectedIndex];
+        requiredPoints = selectedReward && selectedReward.value ? 
+            parseInt(selectedReward.getAttribute('data-points')) : 0;
+    }
+    
     function updateAvailablePoints() {
         const studentSelect = document.getElementById('student');
         if (studentSelect) {
@@ -95,6 +164,10 @@
             if (selectedOption && selectedOption.value) {
                 availablePoints = parseInt(selectedOption.getAttribute('data-points'));
                 document.getElementById('availablePoints').textContent = availablePoints;
+                updateRemainingPoints();
+            } else {
+                availablePoints = 0;
+                document.getElementById('availablePoints').textContent = '-';
                 updateRemainingPoints();
             }
         }
@@ -108,26 +181,97 @@
                 requiredPoints = parseInt(selectedOption.getAttribute('data-points'));
                 document.getElementById('requiredPoints').textContent = requiredPoints;
                 updateRemainingPoints();
+            } else {
+                requiredPoints = 0;
+                document.getElementById('requiredPoints').textContent = '-';
+                updateRemainingPoints();
             }
         }
     }
     
     function updateRemainingPoints() {
-        const remaining = availablePoints - requiredPoints;
         const remainingElement = document.getElementById('remainingPoints');
-        remainingElement.textContent = remaining;
-        
-        // Enable/disable redeem button based on available points
         const redeemBtn = document.getElementById('redeemBtn');
-        if (remaining >= 0 && requiredPoints > 0) {
-            redeemBtn.disabled = false;
+        
+        // Reset everything if either value is missing
+        if (availablePoints <= 0 || requiredPoints <= 0) {
+            remainingElement.textContent = '-';
             remainingElement.classList.remove('negative');
-        } else {
             redeemBtn.disabled = true;
-            if (remaining < 0) {
-                remainingElement.classList.add('negative');
-            }
+            return;
+        }
+        
+        // Calculate remaining points
+        const remaining = availablePoints - requiredPoints;
+        
+        // Handle negative values
+        if (remaining < 0) {
+            // Instead of showing a negative number, show "Not enough points"
+            remainingElement.textContent = "Not enough points";
+            remainingElement.classList.add('negative');
+            redeemBtn.disabled = true;
+            redeemBtn.title = "Not enough points";
+        } else {
+            // Only show the number if it's positive
+            remainingElement.textContent = remaining;
+            remainingElement.classList.remove('negative');
+            redeemBtn.disabled = false;
+            redeemBtn.title = "Redeem this reward";
         }
     }
+    
+    // Add form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        // For admin users, check if a student is selected
+        const studentSelect = document.getElementById('student');
+        if (studentSelect && {% if session.get('is_admin') %}true{% else %}false{% endif %}) {
+            if (!studentSelect.value) {
+                e.preventDefault();
+                alert('Please select a student.');
+                return;
+            }
+        }
+        
+        // Check if a reward is selected
+        const rewardSelect = document.getElementById('reward');
+        if (!rewardSelect.value) {
+            e.preventDefault();
+            alert('Please select a reward.');
+            return;
+        }
+        
+        // Check if enough points - ENHANCED VALIDATION
+        if (availablePoints < requiredPoints) {
+            e.preventDefault();
+            alert(`Insufficient points. You need ${requiredPoints} points but only have ${availablePoints}.`);
+            return;
+        }
+        
+        // Ensure remaining points won't be negative (extra safety check)
+        const remaining = availablePoints - requiredPoints;
+        if (remaining < 0) {
+            e.preventDefault();
+            alert('You do not have enough points to redeem this reward.');
+            return;
+        }
+    });
+    
+    // Initialize the form on load
+    window.addEventListener('DOMContentLoaded', function() {
+        if (document.getElementById('student')) {
+            updateAvailablePoints();
+        }
+        updateRequiredPoints();
+    });
+    // Handle pre-selected reward
+    {% if pre_selected_reward %}
+    document.addEventListener('DOMContentLoaded', function() {
+        const rewardSelect = document.getElementById('reward');
+        if (rewardSelect) {
+            rewardSelect.value = "{{ pre_selected_reward }}";
+            updateRequiredPoints();
+        }
+    });
+    {% endif %}
 </script>
 {% endblock %}
