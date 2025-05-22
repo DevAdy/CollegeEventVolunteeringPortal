@@ -1,6 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 import db  # Import our database module
 from datetime import datetime
+from flask import send_from_directory
+import requests
+import json
 app = Flask(__name__)
 app.secret_key = 'volunteer_management_secret_key'
 
@@ -44,6 +47,10 @@ def format_date(date_string):
 def home():
     return render_template('home.html')
 
+@app.route('/robots.txt')
+def robots_txt():
+    return send_from_directory(app.static_folder, 'robots.txt')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -81,7 +88,33 @@ def signup():
         confirm_password = request.form.get('confirm_password')
         phone = request.form.get('phone', '')  # Optional field
         
-        # Validate all inputs
+        # Get the reCAPTCHA response
+        recaptcha_response = request.form.get('g-recaptcha-response')
+        
+        # Verify the CAPTCHA
+        secret_key = '6LcGh0UrAAAAAHsaiev1Qb0pVOohLbZ0ef9lYj2b'  # Replace with your secret key
+        verification_url = 'https://www.google.com/recaptcha/api/siteverify'
+        payload = {
+            'secret': secret_key,
+            'response': recaptcha_response,
+            'remoteip': request.remote_addr
+        }
+        
+        recaptcha_verified = False
+        try:
+            verification_response = requests.post(verification_url, data=payload)
+            verification_result = verification_response.json()
+            recaptcha_verified = verification_result.get('success', False)
+        except:
+            # If verification fails due to network issues, etc.
+            recaptcha_verified = False
+        
+        # If CAPTCHA verification failed
+        if not recaptcha_verified:
+            flash('Please complete the CAPTCHA verification.')
+            return render_template('signup.html')
+        
+        # Validate all inputs (existing code)
         errors = []
         
         # Validate name
