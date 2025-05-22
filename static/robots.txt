@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /login
+Disallow: /signup
+Disallow: /user/
+Allow: /
+
+# Block sensitive paths
+Disallow: /*?*

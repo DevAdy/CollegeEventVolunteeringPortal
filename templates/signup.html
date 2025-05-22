@@ -1,7 +1,34 @@
 {% extends 'base.html' %}
 
 {% block title %}Sign Up - VolunteerHub{% endblock %}
-
+{% block head_scripts %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}
+{% block head_extra %}
+<style>
+    /* Make sure reCAPTCHA is visible */
+    .g-recaptcha {
+        margin: 15px 0;
+        transform: scale(1);
+        transform-origin: 0 0;
+        max-width: 100%;
+    }
+    
+    /* For very small screens */
+    @media screen and (max-width: 340px) {
+        .g-recaptcha {
+            transform: scale(0.85);
+        }
+    }
+    
+    /* Make sure reCAPTCHA error is visible */
+    #captcha-error {
+        margin-top: 5px;
+        color: #e74c3c;
+        font-size: 0.85rem;
+    }
+</style>
+{% endblock %}
 {% block content %}
 <section class="auth-section">
     <div class="auth-container">
@@ -67,6 +94,11 @@
                         <li id="req-number">Contain at least one number</li>
                         <li id="req-special">Contain at least one special character</li>
                     </ul>
+                </div>
+                <div class="form-group">
+                    <label for="g-recaptcha">Verify you're human</label>
+                    <div class="g-recaptcha" data-sitekey="6LcGh0UrAAAAAP6vyQPB9ATG---WVgNhT6tuIZnF" data-callback="captchaCallback"></div>
+                    <div class="error-message" id="captcha-error"></div>
                 </div>
                 
                 <div class="form-actions">
@@ -338,8 +370,42 @@
             confirmError.textContent = 'Passwords do not match';
             isValid = false;
         }
+
+        // Check if CAPTCHA is completed
+        const captchaResponse = grecaptcha && grecaptcha.getResponse ? grecaptcha.getResponse() : '';
+        const captchaError = document.getElementById('captcha-error');
+
+        if (!captchaResponse) {
+            captchaError.style.display = 'block';
+            captchaError.textContent = 'Please complete the CAPTCHA verification';
+            isValid = false;
+        } else {
+            captchaError.style.display = 'none';
+        }
         
         return isValid;
     }
+</script>
+<script>
+    // CAPTCHA verification callback
+    function captchaCallback() {
+        document.getElementById('captcha-error').style.display = 'none';
+    }
+    
+    // Make sure reCAPTCHA is visible
+    window.onload = function() {
+        // Force recaptcha to display properly
+        setTimeout(function() {
+            if (document.querySelector('.g-recaptcha iframe')) {
+                console.log('reCAPTCHA loaded properly');
+            } else {
+                console.error('reCAPTCHA not loaded, reloading API');
+                // Try to reload the API
+                let script = document.createElement('script');
+                script.src = 'https://www.google.com/recaptcha/api.js';
+                document.body.appendChild(script);
+            }
+        }, 1000);
+    };
 </script>
 {% endblock %}
