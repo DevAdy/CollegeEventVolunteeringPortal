@@ -1,0 +1,510 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - VolunteerHub{% endblock %}
+
+{% block content %}
+<div class="contact-container">
+    <section class="contact-hero">
+        <h1 class="contact-title">Get in Touch</h1>
+        <p class="contact-subtitle">We'd love to hear from you!</p>
+        
+        <div class="contact-animation">
+            <div class="envelope-icon">
+                <i class="fas fa-envelope-open-text"></i>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-cards">
+        <div class="contact-card linkedin">
+            <div class="card-content">
+                <div class="card-front">
+                    <div class="contact-icon">
+                        <i class="fab fa-linkedin"></i>
+                    </div>
+                    <h3>Connect on LinkedIn</h3>
+                    <p>Follow our journey and connect with our network</p>
+                    <div class="flip-prompt">
+                        <span>Click to view</span>
+                        <i class="fas fa-hand-pointer"></i>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <h3>Our LinkedIn Profiles</h3>
+                    <div class="linkedin-profiles">
+                        <a href="https://www.linkedin.com/in/adithya-sriram005" class="linkedin-profile" target="_blank">
+                            <span class="founder-name">Adithya S</span>
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/aditya-b-career" class="linkedin-profile" target="_blank">
+                            <span class="founder-name">Aditya B</span>
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    
+                    </div>
+                    <div class="flip-back">
+                        <span>Back</span>
+                        <i class="fas fa-undo"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="contact-card email">
+            <div class="card-content">
+                <div class="card-front">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email Us</h3>
+                    <p>We're always ready to help with your questions</p>
+                    <div class="flip-prompt">
+                        <span>Click to view</span>
+                        <i class="fas fa-hand-pointer"></i>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <h3>Our Email Addresses</h3>
+                    <div class="email-addresses">
+                        
+                            <span class="email-type">Adithya S</span>
+                            <span class="email-address">1by23ai007@bmsit.in</span>
+                        </a>
+                        
+                            <span class="email-type">Aditya B</span>
+                            <span class="email-address">1by23ai009@bmsit.in</span>
+                        </a>
+                       
+                    </div>
+                    <div class="flip-back">
+                        <span>Back</span>
+                        <i class="fas fa-undo"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="contact-message">
+        <div class="message-bubble">
+            <p>We aim to respond to all inquiries within 24 hours. Thank you for your patience!</p>
+        </div>
+        <div class="floating-icons">
+            <i class="fas fa-comment animated-icon"></i>
+            <i class="fas fa-paper-plane animated-icon"></i>
+            <i class="fas fa-heart animated-icon"></i>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .contact-hero {
+        text-align: center;
+        margin-bottom: 4rem;
+        position: relative;
+    }
+    
+    .contact-title {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(45deg, #8a2be2, #9370db);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: gradient-shift 8s ease infinite;
+        background-size: 200% 200%;
+    }
+    
+    @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .contact-subtitle {
+        font-size: 1.5rem;
+        color: var(--color-text-secondary);
+        margin-bottom: 2rem;
+    }
+    
+    .contact-animation {
+        margin: 3rem 0;
+        height: 120px;
+        position: relative;
+    }
+    
+    .envelope-icon {
+        font-size: 5rem;
+        color: #8a2be2;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translateX(-50%) translateY(0);
+        }
+        50% {
+            transform: translateX(-50%) translateY(-20px);
+        }
+    }
+    
+    .contact-cards {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        margin-bottom: 4rem;
+        flex-wrap: wrap;
+    }
+    
+    .contact-card {
+        width: 350px;
+        height: 320px;
+        perspective: 1000px;
+        margin-bottom: 2rem;
+    }
+    
+    .card-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+    }
+    
+    .contact-card:hover .card-content {
+        transform: scale(1.05);
+    }
+    
+    .contact-card.flipped .card-content {
+        transform: rotateY(180deg);
+    }
+    
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--color-card-bg);
+    }
+    
+    .card-back {
+        transform: rotateY(180deg);
+        text-align: left;
+        padding: 2rem;
+    }
+    
+    .contact-icon {
+        font-size: 3.5rem;
+        color: #8a2be2;
+        margin-bottom: 1.5rem;
+        animation: pulse-icon 2s infinite;
+    }
+    
+    @keyframes pulse-icon {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
+    
+    .contact-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--color-text-primary);
+    }
+    
+    .contact-card p {
+        color: var(--color-text-secondary);
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .flip-prompt, .flip-back {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #8a2be2;
+        cursor: pointer;
+        font-weight: 500;
+        margin-top: auto;
+        padding: 0.5rem 1rem;
+        border: 1px dashed #8a2be2;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .flip-prompt:hover, .flip-back:hover {
+        background-color: rgba(138, 43, 226, 0.1);
+    }
+    
+    /* LinkedIn card styling */
+    .linkedin-profiles {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .linkedin-profile {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.8rem 1rem;
+        background-color: rgba(10, 102, 194, 0.1);
+        border-radius: 8px;
+        color: #0a66c2;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .linkedin-profile:hover {
+        background-color: rgba(10, 102, 194, 0.2);
+        transform: translateX(5px);
+    }
+    
+    .founder-name {
+        font-weight: 600;
+    }
+    
+    /* Email card styling */
+    .email-addresses {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .email-link {
+        display: flex;
+        flex-direction: column;
+        padding: 0.8rem 1rem;
+        background-color: rgba(138, 43, 226, 0.1);
+        border-radius: 8px;
+        color: var(--color-text-primary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .email-link:hover {
+        background-color: rgba(138, 43, 226, 0.2);
+        transform: translateX(5px);
+    }
+    
+    .email-type {
+        font-size: 0.9rem;
+        color: var(--color-text-secondary);
+        margin-bottom: 0.3rem;
+    }
+    
+    .email-address {
+        color: #8a2be2;
+        font-weight: 500;
+    }
+    
+    /* Message section styling */
+    .contact-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        margin-top: 2rem;
+        padding: 2rem 0;
+    }
+    
+    .message-bubble {
+        background-color: rgba(138, 43, 226, 0.1);
+        border-radius: 20px;
+        padding: 1.5rem 2rem;
+        position: relative;
+        max-width: 600px;
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: bob 3s ease-in-out infinite;
+    }
+    
+    @keyframes bob {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+    
+    .message-bubble p {
+        color: var(--color-text-secondary);
+        font-size: 1.1rem;
+    }
+    
+    .message-bubble::after {
+        content: '';
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 20px 20px 0;
+        border-style: solid;
+        border-color: rgba(138, 43, 226, 0.1) transparent transparent transparent;
+    }
+    
+    .floating-icons {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+    }
+    
+    .animated-icon {
+        font-size: 1.5rem;
+        color: #8a2be2;
+    }
+    
+    .animated-icon:nth-child(1) {
+        animation: float-icon 4s ease-in-out infinite;
+    }
+    
+    .animated-icon:nth-child(2) {
+        animation: float-icon 3s ease-in-out infinite 0.5s;
+    }
+    
+    .animated-icon:nth-child(3) {
+        animation: float-icon 5s ease-in-out infinite 1s;
+    }
+    
+    @keyframes float-icon {
+        0%, 100% {
+            transform: translateY(0) rotate(0);
+        }
+        50% {
+            transform: translateY(-15px) rotate(10deg);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .contact-cards {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .contact-card {
+            width: 90%;
+            max-width: 350px;
+        }
+        
+        .contact-title {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Card flip functionality
+        const cards = document.querySelectorAll('.contact-card');
+        
+        cards.forEach(card => {
+            const frontFlipTrigger = card.querySelector('.flip-prompt');
+            const backFlipTrigger = card.querySelector('.flip-back');
+            
+            frontFlipTrigger.addEventListener('click', () => {
+                card.classList.add('flipped');
+            });
+            
+            backFlipTrigger.addEventListener('click', () => {
+                card.classList.remove('flipped');
+            });
+        });
+        
+        // Add animation to floating icons
+        const floatingIcons = document.querySelectorAll('.animated-icon');
+        floatingIcons.forEach(icon => {
+            icon.style.opacity = '0';
+            icon.style.transform = 'translateY(20px)';
+        });
+        
+        // Animate elements when they come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.classList.contains('contact-card')) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    } else if (entry.target.classList.contains('message-bubble')) {
+                        entry.target.style.opacity = '1';
+                        
+                        // Show floating icons with delay
+                        setTimeout(() => {
+                            floatingIcons.forEach((icon, index) => {
+                                setTimeout(() => {
+                                    icon.style.opacity = '1';
+                                    icon.style.transform = 'translateY(0)';
+                                }, index * 300);
+                            });
+                        }, 500);
+                    }
+                }
+            });
+        }, { threshold: 0.2 });
+        
+        // Observe cards and message bubble
+        document.querySelectorAll('.contact-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+        
+        const messageBubble = document.querySelector('.message-bubble');
+        messageBubble.style.opacity = '0';
+        messageBubble.style.transition = 'opacity 0.6s ease-out';
+        observer.observe(messageBubble);
+        
+        // Add hover effect to LinkedIn profile links
+        const linkedinLinks = document.querySelectorAll('.linkedin-profile');
+        linkedinLinks.forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(8px)';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+        
+        // Add hover effect to email links
+        const emailLinks = document.querySelectorAll('.email-link');
+        emailLinks.forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(8px)';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+    });
+</script>
+{% endblock %}
