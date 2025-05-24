@@ -1,0 +1,570 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - VolunteerHub{% endblock %}
+
+{% block content %}
+<div class="faq-container">
+    <header class="faq-header">
+        <h1 class="faq-title">Frequently Asked Questions</h1>
+        <p class="faq-description">Everything you need to know about VolunteerHub</p>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="faq-search" placeholder="Search for answers...">
+            </div>
+        </div>
+    </header>
+
+    <div class="faq-categories">
+        <button class="category-btn active" data-category="all">All Questions</button>
+        <button class="category-btn" data-category="general">General</button>
+        <button class="category-btn" data-category="events">Events</button>
+        <button class="category-btn" data-category="points">Points & Rewards</button>
+        <button class="category-btn" data-category="account">Account</button>
+    </div>
+    
+    <div class="faq-content">
+        <!-- General Questions -->
+        <div class="faq-item" data-category="general">
+            <div class="faq-question">
+                <h3>What is VolunteerHub?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>VolunteerHub is a platform designed for college students to discover, participate in, and earn rewards for volunteering activities. We connect students with meaningful opportunities while gamifying the volunteering experience through a points-based reward system.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item" data-category="general">
+            <div class="faq-question">
+                <h3>How does VolunteerHub work?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>It's simple! Sign up as a student, browse available volunteer events, register for ones that interest you, and attend them. After completion, you'll earn points based on the event's duration and impact. These points can later be redeemed for exciting rewards!</p>
+            </div>
+        </div>
+        
+        <div class="faq-item" data-category="general">
+            <div class="faq-question">
+                <h3>Who can use VolunteerHub?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>VolunteerHub is primarily designed for college students looking to make a positive impact in their communities. Event organizers and college administrators can also use the platform to create and manage volunteer opportunities.</p>
+            </div>
+        </div>
+        
+        <!-- Events Questions -->
+        <div class="faq-item" data-category="events">
+            <div class="faq-question">
+                <h3>How do I register for an event?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>After logging in, browse the Events page, select an event that interests you, and click the "Register" button. You'll receive a confirmation and any additional information needed for the event.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item" data-category="events">
+            <div class="faq-question">
+                <h3>Can I cancel my registration?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>Yes, you can cancel your registration up to 24 hours before the event starts. Go to "My Registrations" in your dashboard and click the "Cancel" button next to the event you wish to withdraw from.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item" data-category="events">
+            <div class="faq-question">
+                <h3>Are there limits to how many events I can join?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>There's no limit to how many events you can participate in! However, some events may have capacity restrictions, so we encourage registering early to secure your spot.</p>
+            </div>
+        </div>
+        
+        <!-- Points & Rewards Questions -->
+        <div class="faq-item" data-category="points">
+            <div class="faq-question">
+                <h3>How are points calculated?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>Points are primarily based on the hours volunteered and the impact level of the event. For example, a 2-hour event might earn you 20 points, while a full-day event could award 50-100 points. Special events or leadership roles may earn bonus points.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item" data-category="points">
+            <div class="faq-question">
+                <h3>What rewards can I redeem with my points?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>Rewards vary from campus merchandise, dining vouchers, and exclusive event tickets to official volunteering certificates. Check the Rewards section regularly as we update offerings frequently!</p>
+            </div>
+        </div>
+        
+        <div class="faq-item" data-category="points">
+            <div class="faq-question">
+                <h3>Do my points expire?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>Points remain valid throughout your academic year. At the start of each new academic year, a small percentage may expire to encourage regular participation. Check your Points dashboard for details on any upcoming expirations.</p>
+            </div>
+        </div>
+        
+        <!-- Account Questions -->
+        <div class="faq-item" data-category="account">
+            <div class="faq-question">
+                <h3>How do I create an account?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>Click on the "Sign Up" button, enter your college email address, create a password, and fill in your basic information. Verify your email address, and you're ready to start volunteering!</p>
+            </div>
+        </div>
+        
+        <div class="faq-item" data-category="account">
+            <div class="faq-question">
+                <h3>Can I update my profile information?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>Yes, you can update most of your profile information by accessing your account settings. However, some information like your student ID may require contacting an administrator for changes.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item" data-category="account">
+            <div class="faq-question">
+                <h3>Is my personal information secure?</h3>
+                <div class="faq-icon"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="faq-answer">
+                <p>Absolutely! We prioritize data security and comply with all relevant privacy regulations. Your personal information is encrypted and never shared with third parties without your consent.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="no-results" style="display: none;">
+        <div class="no-results-content">
+            <i class="fas fa-search-minus"></i>
+            <h3>No matching questions found</h3>
+            <p>Try different keywords or browse by category</p>
+        </div>
+    </div>
+      <section class="faq-cta">
+        <h2>Still have questions?</h2>
+        <p>We're here to help! Reach out to our team for personalized assistance.</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-primary">Contact Us</a>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --faq-accent: #8a2be2;
+        --faq-accent-light: rgba(138, 43, 226, 0.1);
+        --faq-accent-medium: rgba(138, 43, 226, 0.3);
+    }
+    
+    .faq-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+    }
+    
+    .faq-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+    
+    .faq-title {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(45deg, var(--faq-accent), #9370db);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: title-shine 6s ease infinite;
+        background-size: 200% 200%;
+    }
+    
+    @keyframes title-shine {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .faq-description {
+        font-size: 1.25rem;
+        color: var(--color-text-secondary);
+        margin-bottom: 2rem;
+    }
+    
+    .search-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .search-box {
+        display: flex;
+        align-items: center;
+        background-color: var(--color-card-bg);
+        border-radius: 50px;
+        padding: 0.75rem 1.5rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .search-box:focus-within {
+        border-color: var(--faq-accent);
+        box-shadow: 0 5px 25px rgba(138, 43, 226, 0.2);
+        transform: translateY(-2px);
+    }
+    
+    .search-icon {
+        color: var(--faq-accent);
+        margin-right: 0.75rem;
+        font-size: 1.25rem;
+    }
+    
+    #faq-search {
+        flex: 1;
+        border: none;
+        background: transparent;
+        font-size: 1.1rem;
+        color: var(--color-text-primary);
+        outline: none;
+        width: 100%;
+    }
+    
+    .faq-categories {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 3rem;
+    }
+    
+    .category-btn {
+        background-color: var(--color-card-bg);
+        border: none;
+        border-radius: 25px;
+        padding: 0.5rem 1.25rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--color-text-secondary);
+    }
+    
+    .category-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .category-btn.active {
+        background-color: var(--faq-accent);
+        color: white;
+        box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+    }
+    
+    .faq-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 3rem;
+    }
+    
+    .faq-item {
+        background-color: var(--color-card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+    }
+    
+    .faq-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+    
+    .faq-item.active {
+        border-left-color: var(--faq-accent);
+    }
+    
+    .faq-question {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem 1.5rem;
+        cursor: pointer;
+    }
+    
+    .faq-question h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--color-text-primary);
+    }
+    
+    .faq-icon {
+        color: var(--faq-accent);
+        transition: transform 0.3s ease;
+    }
+    
+    .faq-item.active .faq-icon {
+        transform: rotate(-180deg);
+    }
+    
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, padding 0.4s ease;
+        padding: 0 1.5rem;
+    }
+    
+    .faq-item.active .faq-answer {
+        max-height: 300px;
+        padding: 0.5rem 1.5rem 1.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .faq-answer p {
+        color: var(--color-text-secondary);
+        line-height: 1.6;
+        margin: 0;
+    }
+    
+    .no-results {
+        text-align: center;
+        padding: 3rem 0;
+    }
+    
+    .no-results-content {
+        background-color: var(--color-card-bg);
+        border-radius: 12px;
+        padding: 3rem 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .no-results-content i {
+        font-size: 3rem;
+        color: var(--faq-accent);
+        opacity: 0.7;
+        margin-bottom: 1.5rem;
+    }
+    
+    .no-results-content h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .no-results-content p {
+        color: var(--color-text-secondary);
+    }
+    
+    .faq-cta {
+        text-align: center;
+        background-color: var(--faq-accent-light);
+        border-radius: 12px;
+        padding: 2.5rem 2rem;
+        margin-top: 2rem;
+    }
+    
+    .faq-cta h2 {
+        margin-bottom: 0.75rem;
+    }
+    
+    .faq-cta p {
+        max-width: 500px;
+        margin: 0 auto 1.5rem;
+        color: var(--color-text-secondary);
+    }
+    
+    .btn-primary {
+        background-color: var(--faq-accent);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-block;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3);
+    }
+      /* Helper styles removed */
+    
+    @media (max-width: 768px) {
+        .faq-title {
+            font-size: 2rem;
+        }
+        
+        .faq-categories {
+            gap: 0.5rem;
+        }
+        
+        .category-btn {
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .faq-question {
+            padding: 1rem 1.25rem;
+        }
+          /* Helper media queries removed */
+    }
+    
+    [data-category] {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .hidden-faq {
+        display: none;
+    }
+    
+    .fade-in {
+        animation: fadeIn 0.5s ease forwards;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // FAQ accordion functionality
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            
+            question.addEventListener('click', () => {
+                // Close other open items
+                const currentActive = document.querySelector('.faq-item.active');
+                if (currentActive && currentActive !== item) {
+                    currentActive.classList.remove('active');
+                }
+                
+                // Toggle current item
+                item.classList.toggle('active');
+            });
+        });
+        
+        // Category filtering
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                document.querySelector('.category-btn.active').classList.remove('active');
+                btn.classList.add('active');
+                
+                const category = btn.getAttribute('data-category');
+                filterFaqItems(category);
+            });
+        });
+        
+        function filterFaqItems(category) {
+            const faqItems = document.querySelectorAll('.faq-item');
+            let visibleCount = 0;
+            
+            faqItems.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-category') === category) {
+                    item.classList.remove('hidden-faq');
+                    item.classList.add('fade-in');
+                    visibleCount++;
+                } else {
+                    item.classList.add('hidden-faq');
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Show/hide no results message
+            const noResults = document.querySelector('.no-results');
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+        
+        // Search functionality
+        const searchInput = document.getElementById('faq-search');
+        
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            // Reset category filters when searching
+            document.querySelector('.category-btn.active').classList.remove('active');
+            document.querySelector('[data-category="all"]').classList.add('active');
+            
+            const faqItems = document.querySelectorAll('.faq-item');
+            let matchCount = 0;
+            
+            faqItems.forEach(item => {
+                const questionText = item.querySelector('.faq-question h3').innerText.toLowerCase();
+                const answerText = item.querySelector('.faq-answer p').innerText.toLowerCase();
+                
+                if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+                    item.classList.remove('hidden-faq');
+                    matchCount++;
+                } else {
+                    item.classList.add('hidden-faq');
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Show/hide no results message
+            const noResults = document.querySelector('.no-results');
+            if (matchCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        });
+          // Helper tip functionality removed
+        
+        // Animate FAQ items on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('fade-in');
+                    }, 100);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        faqItems.forEach(item => {
+            observer.observe(item);
+        });
+    });
+</script>
+{% endblock %}

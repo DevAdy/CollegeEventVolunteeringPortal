@@ -138,3 +138,34 @@
 .dark-mode .empty-icon {
   color: var(--muted-foreground);
 }
+
+/* Dark mode dropdown styling */
+.dark-mode .user-dropdown-btn,
+.dark-mode .auth-dropdown-btn {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.dark-mode .user-dropdown-btn:hover,
+.dark-mode .auth-dropdown-btn:hover {
+  background-color: var(--primary-hover);
+}
+
+.dark-mode .user-dropdown-content,
+.dark-mode .auth-dropdown-content {
+  background-color: var(--card);
+  border-color: var(--border);
+  box-shadow: var(--shadow-lg);
+}
+
+.dark-mode .user-dropdown-content a,
+.dark-mode .auth-dropdown-content a {
+  color: var(--foreground);
+  border-bottom: 1px solid var(--border);
+}
+
+.dark-mode .user-dropdown-content a:hover,
+.dark-mode .auth-dropdown-content a:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}

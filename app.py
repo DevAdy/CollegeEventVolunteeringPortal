@@ -825,5 +825,17 @@ def edit_student(student_id):
     
     return render_template('admin/edit_student.html', student=student)
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contacts.html')
+    
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
