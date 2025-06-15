@@ -103,3 +103,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - [Flask Documentation](https://flask.palletsprojects.com/)
 - [SQLite Documentation](https://www.sqlite.org/docs.html)
+
+## Authors
+
+| <a href="https://github.com/DevAdy"><img src="https://github.com/DevAdy.png" width="100px" style="border-radius: 50%;" /></a> | <a href="https://github.com/knighthyper"><img src="https://github.com/knighthyper.png" width="100px" style="border-radius: 50%;" /></a> |
+|:---:|:---:|
