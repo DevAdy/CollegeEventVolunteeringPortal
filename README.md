@@ -85,7 +85,58 @@ The application uses an SQLite database with the following tables:
 
 ## Screenshots
 
-[Add screenshots here]  
+### User Interface
+<div align="center">
+  <h4>Home Page</h4>
+  <img src="./screenshots/home.png" alt="Home Page" width="800px">
+  <br><br>
+  
+  <h4>Login & Registration</h4>
+  <div>
+ <img src="./screenshots/sign_in.png" alt="Login Page" width="400px">
+ <img src="./screenshots/sign_up.png" alt="Registration Page" width="400px">
+  </div>
+  <br><br>
+</div>
+
+### Student Interface
+<div align="center">
+  <h4>Student Dashboard</h4>
+  <img src="./screenshots/Student_dashboard.png" alt="Student Dashboard" width="800px">
+  <br><br>
+  
+  <h4>Event Registration & Points</h4>
+  <div>
+ <img src="./screenshots/Student_Registeer.png" alt="Event Registration" width="400px">
+ <img src="./screenshots/Student_My_Points.png" alt="Points History" width="400px">
+  </div>
+  <br><br>
+  
+  <h4>Rewards System</h4>
+  <div>
+ <img src="./screenshots/student_Redeem_rewards.png" alt="Available Rewards" width="400px">
+ <img src="./screenshots/student_Redeeming_Reward.png" alt="Redeeming a Reward" width="400px">
+  </div>
+  <br><br>
+</div>
+
+### Admin Interface
+<div align="center">
+  <h4>Admin Dashboard</h4>
+  <img src="./screenshots/admin_dashboard.png" alt="Admin Dashboard" width="800px">
+  <br><br>
+  
+  <h4>Student & Event Management</h4>
+  <div>
+ <img src="./screenshots/admin_student_list.png" alt="Student Management" width="400px">
+ <img src="./screenshots/admin_add_new_event.png" alt="Event Creation" width="400px">
+  </div>
+  <br><br>
+  
+  <h4>Rewards Management</h4>
+  <img src="./screenshots/admin_add_new_reward.png" alt="Reward Management" width="800px">
+  <br><br>
+</div> 
 
 ## Contributing
 
@@ -106,5 +157,19 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Authors
 
-| <a href="https://github.com/DevAdy"><img src="https://github.com/DevAdy.png" width="100px" style="border-radius: 50%;" /></a> | <a href="https://github.com/knighthyper"><img src="https://github.com/knighthyper.png" width="100px" style="border-radius: 50%;" /></a> |
-|:---:|:---:|
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/DevAdy">
+        <img src="https://github.com/DevAdy.png" width="100px" style="border-radius: 50%"><br>
+        <sub><b>Aditya B</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/knighthyper">
+        <img src="https://github.com/knighthyper.png" width="100px" style="border-radius: 50%"><br>
+        <sub><b>Adithya S</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
